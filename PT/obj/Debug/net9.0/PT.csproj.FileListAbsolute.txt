@@ -1,0 +1,15 @@
+D:\source\PT\bin\Debug\net9.0\PT.exe
+D:\source\PT\bin\Debug\net9.0\PT.deps.json
+D:\source\PT\bin\Debug\net9.0\PT.runtimeconfig.json
+D:\source\PT\bin\Debug\net9.0\PT.dll
+D:\source\PT\bin\Debug\net9.0\PT.pdb
+D:\source\PT\obj\Debug\net9.0\PT.GeneratedMSBuildEditorConfig.editorconfig
+D:\source\PT\obj\Debug\net9.0\PT.AssemblyInfoInputs.cache
+D:\source\PT\obj\Debug\net9.0\PT.AssemblyInfo.cs
+D:\source\PT\obj\Debug\net9.0\PT.csproj.CoreCompileInputs.cache
+D:\source\PT\obj\Debug\net9.0\PT.sourcelink.json
+D:\source\PT\obj\Debug\net9.0\PT.dll
+D:\source\PT\obj\Debug\net9.0\refint\PT.dll
+D:\source\PT\obj\Debug\net9.0\PT.pdb
+D:\source\PT\obj\Debug\net9.0\PT.genruntimeconfig.cache
+D:\source\PT\obj\Debug\net9.0\ref\PT.dll

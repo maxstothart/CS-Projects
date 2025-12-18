@@ -1,0 +1,15 @@
+D:\source\Gemini Challenges\bin\Debug\net9.0\Gemini Challenges.exe
+D:\source\Gemini Challenges\bin\Debug\net9.0\Gemini Challenges.deps.json
+D:\source\Gemini Challenges\bin\Debug\net9.0\Gemini Challenges.runtimeconfig.json
+D:\source\Gemini Challenges\bin\Debug\net9.0\Gemini Challenges.dll
+D:\source\Gemini Challenges\bin\Debug\net9.0\Gemini Challenges.pdb
+D:\source\Gemini Challenges\obj\Debug\net9.0\Gemini Challenges.GeneratedMSBuildEditorConfig.editorconfig
+D:\source\Gemini Challenges\obj\Debug\net9.0\Gemini Challenges.AssemblyInfoInputs.cache
+D:\source\Gemini Challenges\obj\Debug\net9.0\Gemini Challenges.AssemblyInfo.cs
+D:\source\Gemini Challenges\obj\Debug\net9.0\Gemini Challenges.csproj.CoreCompileInputs.cache
+D:\source\Gemini Challenges\obj\Debug\net9.0\Gemini Challenges.sourcelink.json
+D:\source\Gemini Challenges\obj\Debug\net9.0\Gemini Challenges.dll
+D:\source\Gemini Challenges\obj\Debug\net9.0\refint\Gemini Challenges.dll
+D:\source\Gemini Challenges\obj\Debug\net9.0\Gemini Challenges.pdb
+D:\source\Gemini Challenges\obj\Debug\net9.0\Gemini Challenges.genruntimeconfig.cache
+D:\source\Gemini Challenges\obj\Debug\net9.0\ref\Gemini Challenges.dll

@@ -1,0 +1,4 @@
+#SubstationID, MaxCapacityKW
+S_01, 5000
+S_02, 8000
+S_03, 3000

@@ -1,0 +1,10 @@
+#SectorID, SubstationID, CurrentDemandKW
+Ind_A1, S_01, 4200.0
+Res_B1, S_01, 800.0
+Com_C1, S_02, 4500.0
+Ind_A2, S_03, 3150.0
+Res_B2, S_03, 400.0
+Ind_A3, S_04, 7650.0
+Res_B3, S_99, 500.0
+Com_C2, S_06, 3000.0
+Ind_A4, S_06, 2500.0

@@ -1,0 +1,15 @@
+D:\source\Note Associations\bin\Debug\net9.0\Note Associations.exe
+D:\source\Note Associations\bin\Debug\net9.0\Note Associations.deps.json
+D:\source\Note Associations\bin\Debug\net9.0\Note Associations.runtimeconfig.json
+D:\source\Note Associations\bin\Debug\net9.0\Note Associations.dll
+D:\source\Note Associations\bin\Debug\net9.0\Note Associations.pdb
+D:\source\Note Associations\obj\Debug\net9.0\Note Associations.GeneratedMSBuildEditorConfig.editorconfig
+D:\source\Note Associations\obj\Debug\net9.0\Note Associations.AssemblyInfoInputs.cache
+D:\source\Note Associations\obj\Debug\net9.0\Note Associations.AssemblyInfo.cs
+D:\source\Note Associations\obj\Debug\net9.0\Note Associations.csproj.CoreCompileInputs.cache
+D:\source\Note Associations\obj\Debug\net9.0\Note Associations.sourcelink.json
+D:\source\Note Associations\obj\Debug\net9.0\Note Associations.dll
+D:\source\Note Associations\obj\Debug\net9.0\refint\Note Associations.dll
+D:\source\Note Associations\obj\Debug\net9.0\Note Associations.pdb
+D:\source\Note Associations\obj\Debug\net9.0\Note Associations.genruntimeconfig.cache
+D:\source\Note Associations\obj\Debug\net9.0\ref\Note Associations.dll

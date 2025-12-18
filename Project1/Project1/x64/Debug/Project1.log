@@ -1,0 +1,6 @@
+﻿  main.cpp
+D:\source\Project1\Project1\main.cpp(3,10): warning C4067: unexpected tokens following preprocessor directive - expected a newline
+D:\source\Project1\Project1\main.cpp(199,33): warning C4305: 'initializing': truncation from 'double' to 'float'
+D:\source\Project1\Project1\main.cpp(241,6): warning C4326: return type of 'main' should be 'int' instead of 'void'
+D:\source\Project1\Project1\main.cpp(301,15): warning C4244: 'argument': conversion from 'time_t' to 'unsigned int', possible loss of data
+  Project1.vcxproj -> D:\source\Project1\x64\Debug\Project1.exe
