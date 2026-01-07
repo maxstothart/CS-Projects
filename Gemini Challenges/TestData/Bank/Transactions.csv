@@ -1,0 +1,11 @@
+#TransactionID, FromAccount, ToAccount, Amount, Type, RefID
+T_01, ACC_01, ACC_02, 1200.00, Transfer, 
+T_02, ACC_03, ACC_01, 6000.00, Standard, 
+T_03, ACC_02, ACC_04, 500.00, Transfer, 
+T_04, ACC_04, ACC_05, 100.00, Standard, 
+T_05, , , , Reversal, T_01
+T_06, ACC_01, ACC_03, 2000.00, Transfer, 
+T_07, ACC_05, ACC_02, 10000.00, Standard, 
+T_08, ACC_04, ACC_01, 1500.00, Transfer, 
+T_09, , , , Reversal, T_03
+T_10, ACC_02, ACC_05, 50.00, Standard,

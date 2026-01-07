@@ -1,11 +1,21 @@
-﻿using System.IO.Pipes;
+﻿using Microsoft.VisualBasic;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
+using System.Globalization;
+using System.IO.Pipes;
+using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Runtime.Intrinsics.X86;
+using System.Runtime.Versioning;
 using System.Security.Cryptography.X509Certificates;
+using System.Security.Principal;
 using System.Transactions;
 using CT = Tools.ConsoleTools;
 using LCSV = Tools.LoadCSVFromFile;
 using SORT = Tools.Sort;
+
 
 namespace Gemini_Challenges
 {
@@ -17,7 +27,6 @@ namespace Gemini_Challenges
             {
                 int[] x = { 3, 4, 5, 6, 6, 7, 8, 9, 9 };
                 var cc = new CurrencyConverter();
-
                 CT.Print(Functions.ReverseString("Test"));
                 CT.Print(Functions.IsPalindrome("Test"));
                 CT.Print(Functions.IsPalindrome("Hannah"));
@@ -44,22 +53,19 @@ namespace Gemini_Challenges
                 CT.Print(FPV.GetDuplicates(), "Duplicates: ");
                 CT.Print(FPV.CheckGateConflicts(), "Gate Conflicts: ");
             }
-            if (true)
+            if (false)
             {
                 var GLB = new GridLoadBalancer(new LCSV("D:\\source\\Gemini Challenges\\TestData\\GridLoadBalancer\\Substations3.dat"));
                 GLB.UpdateDemand(new LCSV("D:\\source\\Gemini Challenges\\TestData\\GridLoadBalancer\\Demand3.log"));
-
                 CT.Print("Initial Data:");
                 CT.Print(GLB.GetNodes().Select(i => i.Item1 + ", " + i.Item2 + ", " + i.Item3.ToString()).ToArray(), null, "Nodes: ");
-                CT.Print(GLB.GetDraw().Select(i => i.Item1.ToString()+", "+i.Item2.ToString()).ToArray(), null, "Current Power Draw (KW): ");
+                CT.Print(GLB.GetDraw().Select(i => i.Item1.ToString() + ", " + i.Item2.ToString()).ToArray(), null, "Current Power Draw (KW): ");
                 CT.Print(GLB.GetHNode().Select(i => i.Item1 + ", " + i.Item2).ToArray(), null, "Hungriest Node per Station: ");
                 CT.Print(GLB.CheckOverload().Select(i => i.Item1.ToString() + ", " + i.Item2.ToString() + ", " + i.Item3.ToString() + "KW").ToArray(), null, "Overloads: ");
                 CT.EmptyLine(3);
                 CT.Print("Before and After Balancing:");
-                CT.Print(GLB.GetDrawPercentage().Select(i => i.Item1.ToString() + ", " + i.Item2.ToString()+"%").ToArray(), null, "Current Power Draw (%): ");
-
+                CT.Print(GLB.GetDrawPercentage().Select(i => i.Item1.ToString() + ", " + i.Item2.ToString() + "%").ToArray(), null, "Current Power Draw (%): ");
                 GLB.SmartRebalance(95);
-
                 CT.Print(GLB.GetDrawPercentage().Select(i => i.Item1.ToString() + ", " + i.Item2.ToString() + "%").ToArray(), null, "Current Power Draw (%): ");
                 CT.EmptyLine(3);
                 CT.Print("Final Data:");
@@ -67,14 +73,69 @@ namespace Gemini_Challenges
                 CT.Print(GLB.GetDraw().Select(i => i.Item1.ToString() + ", " + i.Item2.ToString()).ToArray(), null, "Current Power Draw (KW): ");
                 CT.Print(GLB.GetHNode().Select(i => i.Item1 + ", " + i.Item2).ToArray(), null, "Hungriest Node per Station: ");
                 CT.Print(GLB.CheckOverload().Select(i => i.Item1.ToString() + ", " + i.Item2.ToString() + ", " + i.Item3.ToString() + "KW").ToArray(), null, "Overloads: ");
+            }
+            if (false)
+            {
+                var LAG = new LogAggregator("D:\\source\\Gemini Challenges\\TestData\\LogAggregator\\");
+
+                LAG.SortLogs();
+                CT.Print(LAG.Data.GetAllLines(), null, "Sorted Logs: ");
+                CT.EmptyLine();
+
+                LAG.DetectErrors();
+                CT.Print(LAG.Data.GetAllLines(), null, "Flagged Logs: ");
+            }
+            if (false)
+            {
+                var PC = new PortController(new LCSV("D:\\source\\Gemini Challenges\\TestData\\Port Controller\\ship_manifest.txt"), 5);
+                PC.Process();
+                CT.Print(PC.Moves);
+                CT.EmptyLine();
+                PC.ShowLanesFull();
+            }
+            if (false)
+            {
+                var Bank = new Bank(new LCSV("D:\\source\\Gemini Challenges\\TestData\\Bank\\Accounts.dat"));
+                Bank.ProcessTrans(new LCSV("D:\\source\\Gemini Challenges\\TestData\\Bank\\Transactions.csv"));
+            }
+            if (false)
+            {
+                Object lck = new Lock();
+                var Bank = new Bank(new LCSV("D:\\source\\Gemini Challenges\\TestData\\Bank\\Accounts.dat"));
+                Parallel.For(0, 100, i =>
+                {
+                    lock (lck) {
+                        Bank.ProcessTrans("T_01", "ACC_01", "ACC_02", 2, "Transfer", "");
+                    }
+                }
+                );
+                CT.Print(Bank.GetBalance("ACC_01").ToString());
+            }
+            if (false) //CosCracker
+            {
+                double Target = Math.Cos(0274403813);
+                var options = new ParallelOptions { MaxDegreeOfParallelism = 20 };
+                Parallel.For(200000000, 300000000, options, (i, state) =>
+                {
+                    if (i % 1000000000 == 0)
+                    {
+                        CT.Print(i / 10000000);
+                    }
+                    if (Math.Cos(i) == Target)
+                    {
+                        CT.Print(i);
+                        state.Stop();
+                    }
+                }
+                );
+            }
+            if (true)
+            {
 
             }
-
-
         }
-        
-
     }
+}
     static class Functions
     {
         public static string ReverseString(string input) => new string(input.Reverse().ToArray());
@@ -93,12 +154,21 @@ namespace Gemini_Challenges
         public static (int, int) ArrayMinMax(int[] Data)
         {
             (int min, int max) = (Data[0], Data[0]);
-            for(int i = 0; i < Data.Length; i++)
+            for (int i = 0; i < Data.Length; i++)
             {
                 if (Data[i] > max) { max = Data[i]; }
                 if (Data[i] < min) { min = Data[i]; }
             }
             return (min, max);
+        }
+        public static (int, int) ArrayMin(int[] Data)
+        {
+            (int min, int index) = (Data[0], 0);
+            for (int i = 0; i < Data.Length; i++)
+            {
+                if (Data[i] < min) { min = Data[i]; index = i; }
+            }
+            return (min, index);
         }
         public static int[] FindDuplicates(int[] Data)
         {
@@ -135,7 +205,7 @@ namespace Gemini_Challenges
             int[] output = new int[Max];
             output[0] = 1;
             output[1] = 1;
-            for (int i = 1; i < Max-1; i++)
+            for (int i = 1; i < Max - 1; i++)
             {
                 output[i + 1] = output[i - 1] + output[i];
             }
@@ -155,7 +225,7 @@ namespace Gemini_Challenges
         public double Convert(String input, String OutputCurrency = "USD")
         {
             //23.54 NZD
-            RatiosToUU.TryGetValue(input.Substring(input.Length-3,3), out double InRatio);
+            RatiosToUU.TryGetValue(input.Substring(input.Length - 3, 3), out double InRatio);
             RatiosToUU.TryGetValue(OutputCurrency, out double OutRatio);
             return (double)Math.Round((double.Parse(input[0..^3]) / InRatio) * OutRatio, 2);
         }
@@ -195,12 +265,12 @@ namespace Gemini_Challenges
             int[] ConflictCount = new int[Data.LineCount()];
             List<int> Output = new List<int>();
             (int[], int[]) gateTimes = SORT.Bubble(CT.ToInt(Data.GetData("TakeoffTime")));
-            foreach (int i in Enumerable.Range(1, gateTimes.Item2.Length-1))
+            foreach (int i in Enumerable.Range(1, gateTimes.Item2.Length - 1))
             {
-                if (gateTimes.Item2[i] - gateTimes.Item2[i-1] <= 15)
+                if (gateTimes.Item2[i] - gateTimes.Item2[i - 1] <= 15)
                 {
                     Output.Add(gateTimes.Item1[i]);
-                    Output.Add(gateTimes.Item1[i-1]);
+                    Output.Add(gateTimes.Item1[i - 1]);
                 }
             }
             //CT.Print(Data.GetLine(Output.ToArray()));
@@ -208,7 +278,6 @@ namespace Gemini_Challenges
             return (Output.ToArray(), Data.GetLine(Output.ToArray()));
         }
     }
-    
     public class GridLoadBalancer
     {
         public class Substation(String id, double maxcap)
@@ -219,11 +288,11 @@ namespace Gemini_Challenges
             public String ID = id;
             public Dictionary<String, double> Nodes = new Dictionary<string, double>();
             public double MaxCapacity = maxcap;
-            public double GetDraw() 
-            { 
+            public double GetDraw()
+            {
                 if (Nodes.Count < 1) { return 0; }
-                double i = 0;  
-                foreach (double draw in Nodes.Values) 
+                double i = 0;
+                foreach (double draw in Nodes.Values)
                 {
                     i += draw;
                 }
@@ -239,7 +308,7 @@ namespace Gemini_Challenges
                 var x = Nodes.OrderBy(i => i.Value);
                 return (x.Select(i => i.Key).ToArray()[^1], x.Select(i => i.Value).ToArray()[^1]);
             }
-            
+
         }
         Dictionary<String, Substation> Substations = new Dictionary<String, Substation>();
         public GridLoadBalancer(LCSV substations)
@@ -256,15 +325,15 @@ namespace Gemini_Challenges
             foreach (Object[] line in demand.GetAllLines())
             {
                 //CT.Print(line);
-                if (Substations.TryGetValue(line[1].ToString(), out Substation ss)) 
-                { 
-                    ss.Nodes[line[0].ToString()] = double.Parse(line[2].ToString()); 
-                }
-                else 
+                if (Substations.TryGetValue(line[1].ToString(), out Substation ss))
                 {
-                    CT.Print("Remapping \"" + line[0].ToString() + "\" from \"" + line[1] + "\" to \"" + this.SmartMap((line[0].ToString(), double.Parse(line[2].ToString())), 100)+"\"");
+                    ss.Nodes[line[0].ToString()] = double.Parse(line[2].ToString());
+                }
+                else
+                {
+                    CT.Print("Remapping \"" + line[0].ToString() + "\" from \"" + line[1] + "\" to \"" + this.SmartMap((line[0].ToString(), double.Parse(line[2].ToString())), 100) + "\"");
                     //Console.WriteLine(line[1].ToString() + line[0]);
-                    
+
                 }
             }
             this.SmartRebalance(100);
@@ -291,7 +360,7 @@ namespace Gemini_Challenges
         public List<(String, String)> GetHNode()
         {
             List<(String, String)> Out = new List<(string, String)>();
-            foreach (Substation ss in Substations.Values) { Out.Add((ss.ID, ss.GetHungriestNode().Item1+", "+ss.GetHungriestNode().Item2.ToString())); }
+            foreach (Substation ss in Substations.Values) { Out.Add((ss.ID, ss.GetHungriestNode().Item1 + ", " + ss.GetHungriestNode().Item2.ToString())); }
             return Out;
         }
         public List<(String, double, double)> CheckOverload()
@@ -302,7 +371,7 @@ namespace Gemini_Challenges
                 double i = ss.GetDraw();
                 if (i > ss.MaxCapacity)
                 {
-                    Output.Add((ss.ID, ss.MaxCapacity, i-ss.MaxCapacity));
+                    Output.Add((ss.ID, ss.MaxCapacity, i - ss.MaxCapacity));
                 }
             }
             return Output;
@@ -316,21 +385,21 @@ namespace Gemini_Challenges
                 if (HungriestNode.Item1 == null) { break; }
                 foreach (Substation nss in Substations.Values)
                 {
-                    if ((((HungriestNode.Item2 + nss.GetDraw())/nss.MaxCapacity)*100) < ((ss.GetDrawPercentage() > 100) ? 100: 100-(100-SwitchThreshold)/2))
+                    if ((((HungriestNode.Item2 + nss.GetDraw()) / nss.MaxCapacity) * 100) < ((ss.GetDrawPercentage() > 100) ? 100 : 100 - (100 - SwitchThreshold) / 2))
                     {
                         nss.Nodes[HungriestNode.Item1] = ss.Nodes[HungriestNode.Item1];
                         ss.Nodes.Remove(HungriestNode.Item1);
                         break;
                     }
                 }
-                
+
             }
         }
         public String SmartMap((String ID, double Draw) Node, int SwitchThreshold = 90)
         {
             foreach (Substation ss in Substations.Values)
             {
-                if (((ss.GetDraw()+Node.Draw)/ss.MaxCapacity)*100 < SwitchThreshold)
+                if (((ss.GetDraw() + Node.Draw) / ss.MaxCapacity) * 100 < SwitchThreshold)
                 {
                     ss.Nodes.Add(Node.ID, Node.Draw);
                     return ss.ID;
@@ -339,6 +408,281 @@ namespace Gemini_Challenges
             return null;
         }
     }
+    public class LogAggregator
+    {
+        public LCSV Data;
+        public LogAggregator(String dirName)
+        {
+            Data = LCSV.LoadFromDir(dirName);
+        }
+        public void SortLogs()
+        {
+            List<Object[]> output = new List<object[]>();
 
+            (int[] i, Object[] v) sx = SORT.Bubble(Data.GetData(1));
+            //CT.Print(sx);
+            Data.ReOrder(sx.i);
+            int Loss = 1; //starting 1 to offset the +1 approach
+            for (int i = 0; i < Data.LineCount()-Loss; i++)
+            {
+                if (Data.GetLine(i)[1].ToString() == Data.GetLine(i + 1)[1].ToString())
+                {
+                    Loss++;
+                    //CT.Print(Data.GetLine(i + 1)[0].ToString() + ", " + Data.GetLine(i)[0].ToString());
+                    Data.Edit(i, 0, Data.GetLine(i + 1)[0].ToString() + ", " + Data.GetLine(i)[0].ToString());
+                    Data.CutLine(i + 1);
+                }
+            }
 
-}
+            //Data.CutLine(5);
+        }
+        public void DetectErrors()
+        {
+            int[] ErrorIndices = Data.Find(2, "ERROR");
+            List<DateTime> ErrorTimes = new List<DateTime>();
+            //CT.Print(ErrorIndices);
+            foreach (int i in Enumerable.Range(0,ErrorIndices.Length))
+            {
+                ErrorTimes.Add(DateTime.Parse((String)Data.GetLine(ErrorIndices[i])[1]));
+            }
+            int c1 = 0;
+            int c2 = 0;
+            int loss = 1;
+
+            while (c1 < ErrorIndices.Length && c2 < ErrorIndices.Length)
+            {
+                //Console.WriteLine(c2 - c1);
+                if (c2 - c1 >= 2)
+                {
+                    //Console.WriteLine("Found");
+                    Data.InsertLine(ErrorIndices[c2] + loss, "X", "X", "CRITICAL", "More than 3 Errors within 30s");
+                    c2++;
+                    loss++;
+                    c1 = c2;
+                    //break;
+                }
+                else
+                {
+                    if (ErrorTimes[c1].AddSeconds(30).CompareTo(ErrorTimes[c2]) >= 0)
+                    {
+                        c2++;
+                    }
+                    else { c1++; }
+                }
+            }
+
+        }
+    }
+    public class PortController
+    {
+        public struct Container
+        {
+
+            public String ID;
+            public int Weight;
+            public int Priority;
+            public Container(String id, int weight, int priority)
+            {
+                ID = id;
+                Weight = weight;
+                Priority = priority;
+            }
+            public Container(params Object[] input)
+            {
+                ID = (String)input[0];
+                Weight = int.Parse((String)input[1]);
+                Priority = int.Parse((String)input[2]);
+            }
+        }
+
+        public int Moves = 0;
+        public Dictionary<int, Stack<Container>> Lanes = new Dictionary<int, Stack<Container>>();
+        public Queue<Container> Incoming;
+
+        public PortController(LCSV Manifest, int LaneCount)
+        {
+            Incoming = new Queue<Container>();
+            foreach (Object[] line in Manifest.GetAllLines()) { Incoming.Enqueue(new Container(line)); }
+            foreach (int i in Enumerable.Range(0, LaneCount)) { Lanes.Add(i, new Stack<Container>(Incoming.Count)); }
+        }
+        public int[]? GetLaneWeights()
+        {
+            int[] output = new int[Lanes.Count];
+            foreach (int i in Enumerable.Range(0, Lanes.Count))
+            {
+                output[i] = ((Lanes[i].Count > 0) ? Lanes[i].Peek().Weight : 100000);
+            }
+            return output;
+        }
+        public int GetLaneWeights(int index)
+        {
+            return ((Lanes[index].Count > 0) ? Lanes[index].Peek().Weight : 100000);
+        }
+        public bool PushContainer(Container Next, bool dug = false)
+        {
+            if (Next.Priority > 3) { Lanes.Reverse(); }
+            for(int i=0; i < Lanes.Count; i++)
+            {
+                if (Next.Weight <= GetLaneWeights(i) && (i <= 1 && Next.Priority <= 3 || i > 1 && Next.Priority > 3))
+                {
+                    Moves++;
+                    Lanes[i].Push(Next);
+                    return true;
+                }
+            }
+            return false;
+        }
+        public void Dig(Container C)
+        {
+            List<int> AvailableLanes = Enumerable.Range(0,Lanes.Count).ToList()[((C.Priority <= 3)? 0..2 : 2..)];
+            int[] LaneMoves = new int[AvailableLanes.Count];
+            for (int a = 0; a < AvailableLanes.Count; a++)
+            {
+                
+                if (Lanes[AvailableLanes[a]].ToArray().Last().Weight < C.Weight) 
+                { 
+                    LaneMoves[a] = Lanes[AvailableLanes[a]].Count;
+                }
+                else
+                {
+                    var x = Lanes[AvailableLanes[a]].ToArray();
+                    for (int i = 0; i < x.Length; i++)
+                    {
+                        if (x[i].Weight >= C.Weight)
+                        {
+                            LaneMoves[a] = x.Length - i;
+                            break;
+                        }
+                    }
+                }
+            }
+            Lanes.TryGetValue(AvailableLanes[SORT.Min(LaneMoves).index], out Stack<Container> ActiveLane);
+            Queue<Container> Displaced = new Queue<Container>();
+
+            while (true)
+            {
+                if (ActiveLane.Count == 0 || ActiveLane.Peek().Weight > C.Weight) { ActiveLane.Push(C); break; }
+                Displaced.Enqueue(ActiveLane.Pop());
+            }
+            if (Displaced.Count > 0) { Process(new Queue<Container>(Displaced.Reverse()), true, true); }
+        }
+        public void Process() { Process(Incoming); }
+        public void Process(Queue<Container> q, bool dig = true, bool dug=false)
+        {
+            while (true)
+            {
+                Container C = q.Dequeue();
+                if (!PushContainer(C, dug)) 
+                {
+                    
+                    if (dig) { Dig(C); }
+                }
+                if (q.Count == 0) { break; }
+            }
+        }
+        public void ShowLanesFull(bool ID = true, bool Weight = true, bool Priority = true)
+        {
+            foreach (int i in Enumerable.Range(0, Lanes.Count))
+            {
+                CT.Print(Lanes.Values.ToArray()[i].ToArray().Select(value => (((ID) ? value.ID + ", " : "") + ((Weight) ? value.Weight + ", " : "") + ((Priority) ? value.Priority + ", " : ""))[..^2]).ToArray(), null, "Lane " + i + ": ");
+            }
+        }
+        public void ShowLanes(bool ID = true, bool Weight = true, bool Priority = false)
+        {
+            String[] Out = new string[Lanes.Count];
+            foreach (int i in Enumerable.Range(0, Lanes.Count))
+            {
+                Out[i] = CT.ToString(Lanes.Values.ToArray()[i].ToArray().Select(value => (((ID)?value.ID + "-":"") + ((Weight) ? value.Weight + "-" : "") + ((Priority) ? value.Priority + "-" : ""))[..^1]).ToArray());   
+            }
+            CT.Print(Out, null, "Lanes: ");
+        }
+    }
+    public class Bank
+    {
+        private readonly object _lock = new object();
+        List<Object[]> Outgoing = new List<object[]>();
+        Dictionary<String, Decimal> Accounts = new Dictionary<String, Decimal>();
+        public Bank(LCSV accounts)
+        {
+            foreach (var line in accounts.GetAllLines())
+                Accounts.Add((String)line[0], Decimal.Parse(line[1].ToString()));
+        }
+        public void ProcessTrans(LCSV Transactions)
+        {
+            for (int i = 0; i < Transactions.LineCount(); i++)
+            {
+                var line = Transactions.GetLine(i);
+                if ((String)line[4] == "Reversal")
+                {
+                    var referencedLine = Transactions.GetLine(Transactions.Find("TransactionID", (String)line[5])[0]);
+                    Decimal fees = GetFees(referencedLine[3].ToString());
+                    switch (referencedLine[4])
+                    {
+                        case "Transfer":
+                            Accounts[(String)referencedLine[2]] -= Decimal.Parse((String)referencedLine[3]);
+                            Accounts[(String)referencedLine[1]] += (Decimal.Parse((String)referencedLine[3]) + fees);
+                            CT.Print("Reversing Transfer \"" + referencedLine[0] + "\"of $" + (String)referencedLine[3] + " From \"" + (String)referencedLine[1] + "\" to \"" + (String)referencedLine[2] + "\"");
+                            break;
+                        case "Standard":
+                            Outgoing.Remove(line);
+                            Accounts[(String)line[1]] += (Decimal.Parse((String)line[3]) + GetFees((String)line[3]));
+                            CT.Print("Reversing Transfer \"" + referencedLine[0] + "\"of $" + (String)referencedLine[3] + " From \"" + (String)referencedLine[1] + "\" to Outgoing Account \"" + (String)referencedLine[2] + "\"");
+                            break;
+                    }
+                }
+                else
+                {
+                    ProcessTrans((String)line[0], (String)line[1], (String)line[2], Decimal.Parse(line[3].ToString()), (String)line[4], (String)line[5]);
+                }
+            }
+        }
+        public void ProcessTrans(String TransactionID, String? FromAccount, String? ToAccount, Decimal? Amount, String Type, String? RefID)
+        {
+            switch (Type)
+            {
+                case "Transfer":
+                    if (Accounts[FromAccount] >= Amount + GetFees(Amount.Value))
+                    {
+                        if (!Accounts.ContainsKey(FromAccount)) { CT.Print("Account \"" + FromAccount + "\"Doesn't exist."); break; }
+                        Accounts[FromAccount] -= Amount.Value + GetFees(Amount.Value);
+                        Accounts[ToAccount] += Amount.Value;
+                        CT.Print("Transferring $" + Amount + " From \"" + FromAccount + "\" to \"" + ToAccount + "\"");
+                    }
+                    else
+                    {
+                        CT.Print("Insufficient funds: Required $" + Amount + " had $" + Accounts[FromAccount]);
+                    }
+                    break;
+                case "Standard":
+                    if (Accounts[FromAccount] >= Amount + GetFees(Amount.Value))
+                    {
+                        if (!Accounts.ContainsKey(FromAccount)) { CT.Print("Account \"" + FromAccount + "\"Doesn't exist."); break; }
+                        Accounts[FromAccount] -= Amount.Value + GetFees(Amount.Value);
+                        Outgoing.Add(new object[] { TransactionID, FromAccount, ToAccount, Amount, Type, RefID });
+                        CT.Print("Transferring $" + Amount + " From \"" + FromAccount + "\" to Outgoing Account \"" + ToAccount + "\"");
+                    }
+                    else
+                    {
+                        CT.Print("Insufficient funds: Required $" + Amount + " had $" + Accounts[FromAccount]);
+                    }
+                    break;
+            }
+        }
+        public Decimal GetBalance(String ACC)
+        {
+            return Accounts[ACC];
+        }
+        public Decimal GetFees(Decimal Amount)
+        {
+            if (Amount > 1000)
+            {
+                return 2;
+            }
+            return 0;
+        }
+        public Decimal GetFees(String Amount)
+        {
+            return GetFees(Decimal.Parse(Amount));
+        }
+
+    }

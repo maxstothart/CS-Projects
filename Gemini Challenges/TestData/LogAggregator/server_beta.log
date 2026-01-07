@@ -1,0 +1,5 @@
+2026-01-05T09:59:58 | INFO | Pre-check complete
+2026-01-05T10:00:15 | ERROR | Service 'Auth' failed to respond
+2026-01-05T10:00:20 | ERROR | Connection reset by peer
+2026-01-05T10:00:50 | INFO | Retrying connection...
+2026-01-05T10:01:05 | INFO | Connection restored

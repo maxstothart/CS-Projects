@@ -1,0 +1,5 @@
+2026-01-05T10:00:00 | INFO | System Boot Initialized
+2026-01-05T10:00:05 | INFO | User 'admin' logged in
+2026-01-05T10:00:15 | ERROR | Service 'Auth' failed to respond
+2026-01-05T10:00:45 | WARNING | Memory usage at 85%
+2026-01-05T10:01:10 | INFO | Heartbeat sent

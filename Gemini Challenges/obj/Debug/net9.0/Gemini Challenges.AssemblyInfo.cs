@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Gemini Challenges")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d1024581a530f208508d7f7406dc9cf5650606c4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4fc90d1bd908089dc04b8eae779ccfd7be58e074")]
 [assembly: System.Reflection.AssemblyProductAttribute("Gemini Challenges")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Gemini Challenges")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
